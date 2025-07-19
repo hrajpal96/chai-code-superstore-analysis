@@ -22,7 +22,7 @@ Initial inspection includes:
 - Summary statistics and uniqueness analysis
 
 **Plot:**  
-![Missing Values Heatmap](./plots/step_01_missing_values.png)
+![Missing Values Heatmap](./plots/01_missing_values_heatmap.png)
 
 ---
 
@@ -33,7 +33,7 @@ Initial inspection includes:
 - Preserved data quality for analysis
 
 **Plot:**  
-![Top 10 Duplicate Order IDs](plots/step_02_top_duplicates.png)
+![Top 10 Duplicate Order IDs](plots/02_top_duplicates.png)
 
 ---
 
@@ -45,8 +45,8 @@ Initial inspection includes:
 
 **Plots:**
 
-- ![Year Match Count](plots/step_03_year_match.png)
-- ![Monthly Order Volume](plots/step_03_monthly_orders.png)
+- ![Year Match Count](plots/03_order_year_match.png)
+- ![Monthly Order Volume](plots/04_monthly_orders.png)
 
 ---
 
@@ -58,8 +58,8 @@ Initial inspection includes:
 
 **Plots:**
 
-- ![Quantity Box Plot](plots/step_04_quantity_boxplot.png)
-- ![Days to Ship Histogram](plots/step_04_days_to_ship.png)
+- ![Quantity Box Plot](plots/06_quantity_boxplot.png)
+- ![Days to Ship Histogram](plots/05_days_to_ship.png)
 
 ---
 
@@ -70,7 +70,7 @@ Initial inspection includes:
 
 **Plot:**
 
-- ![Top 20 Customer Initials](plots/step_05_masked_initials.png)
+- ![Top 20 Customer Initials](plots/07_customer_initials.png)
 
 ---
 
@@ -87,7 +87,7 @@ Initial inspection includes:
 
 **Plot:**
 
-- ![Top States by Orders](plots/step_07_top_states.png)
+- ![Top States by Orders](plots/08_top_states.png)
 
 ---
 
@@ -100,7 +100,7 @@ Initial inspection includes:
 
 **Plot:**
 
-- ![Shipping Urgency Count](plots/step_08_shipping_urgency.png)
+- ![Shipping Urgency Count](plots/09_shipping_urgency.png)
 
 ---
 
@@ -112,9 +112,9 @@ Initial inspection includes:
 
 **Plots:**
 
-- ![Original Price Histogram](plots/step_09_original_price.png)
-- ![Discount Price Histogram](plots/step_09_discount_price.png)
-- ![Total Discount Histogram](plots/step_09_total_discount.png)
+- ![Original Price Histogram](plots/10_original_price.png)
+- ![Discount Price Histogram](plots/11_discount_price.png)
+- ![Total Discount Histogram](plots/12_total_discount.png)
 
 ---
 
@@ -128,9 +128,9 @@ Initial inspection includes:
 
 **Plots:**
 
-- ![Sales Price Box Plot](plots/step_10_sales_price_boxplot.png)
-- ![Profit Box Plot](plots/step_10_profit_boxplot.png)
-- ![Sales vs Profit Segmentation](plots/step_10_quintile_heatmap.png)
+- ![Sales Price Box Plot](plots/10_sales_price_boxplot.png)
+- ![Profit Box Plot](plots/10_profit_boxplot.png)
+- ![Sales vs Profit Segmentation](plots/10_quintile_heatmap.png)
 
 ---
 
@@ -142,11 +142,8 @@ Initial inspection includes:
 
 **Plots:**
 
-- ![Top Profitable Products](plots/step_11_top_profit_products.png)
-- ![Top Loss Products](plots/step_11_loss_products.png)
-- ![Sales vs Profit Regression](plots/step_11_sales_vs_profit_regression.png)
-- ![Days to Ship vs Profit](plots/step_11_days_to_ship_vs_profit_violin.png)
-
+- ![Top Profitable Products](plots/11_top_profit_products.png)
+- ![Top Loss Products](plots/11_loss_products.png)
 ---
 
 ##  Output
@@ -175,8 +172,8 @@ Superstore_Case_Study/
  app.py
  README.md
  plots/
-     step_01_missing_values.png
-     step_02_top_duplicates.png
+     01_missing_values.png
+     02_top_duplicates.png
      ...
 ```
 
