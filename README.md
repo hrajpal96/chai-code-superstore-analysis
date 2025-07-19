@@ -22,7 +22,7 @@ Initial inspection includes:
 - Summary statistics and uniqueness analysis
 
 **Plot:**  
-![Missing Values Heatmap](plots/step_01_missing_values.png)
+![Missing Values Heatmap](./plots/step_01_missing_values.png)
 
 ---
 
@@ -152,7 +152,6 @@ Initial inspection includes:
 ##  Output
 
 - Cleaned dataset: `SuperStore_Cleaned_Final.csv`
-- Visuals: 20+ high-quality plots for insights
 
 ---
 
@@ -162,15 +161,7 @@ Initial inspection includes:
 - **Customer Privacy**: Important for ethical analysis
 - **Feature Engineering**: Adds business depth
 - **Outlier Removal**: Improves segmentation robustness
-- **Segmentation**: Enables actionable marketing
-
----
-
-##  Limitations & Next Steps
-
-- No time-series forecasting (future potential)
-- Could add clustering (KMeans) or RFM scoring
-- Include geospatial analysis using state/city
+- **Segmentation**: Enables actionable points for marketing
 
 ---
 
@@ -178,10 +169,10 @@ Initial inspection includes:
 
 ```
 Superstore_Case_Study/
-
  SuperStore_Dataset.csv
  SuperStore_Cleaned_Final.csv
- Superstore_EDA_Notebook.ipynb
+ Superstore-Sales-Case-Study.ipynb
+ app.py
  README.md
  plots/
      step_01_missing_values.png
