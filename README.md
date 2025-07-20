@@ -98,11 +98,15 @@ Initial inspection includes:
   - `Original Price` (before discount)
   - `Total Sales`, `Total Profit`, `Discount Price`, `Total Discount`
   - `Shipping Urgency` buckets: Immediate, Urgent, Standard
-| **Shipping Urgency** | **Days to Ship** | **Interpretation**                                  |
+
+### Shipping Urgency Buckets
+
+| **Shipping Urgency** | **Days to Ship** | **Interpretation**                                   |
 |----------------------|------------------|------------------------------------------------------|
 | **Immediate**        | 0                | Shipped on the **same day** as the order was placed. |
 | **Urgent**           | 1 to 3           | Shipped within **1 to 3 days** after the order date. |
 | **Standard**         | 4 or more        | Shipped **4+ days** after the order date.            |
+
 
 **Plot:**
 
