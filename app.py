@@ -64,7 +64,6 @@ if uploaded_file is not None:
     fig = px.line(monthly, x='Order Month', y='Order Count', markers=True,
                   title="Monthly Order Volume Over Time",
                   labels={'Order Month': 'Month', 'Order Count': 'Number of Orders'})
-    
     fig.update_layout(xaxis_tickangle=-45)
     st.plotly_chart(fig, use_container_width=True)
 
@@ -132,16 +131,10 @@ if uploaded_file is not None:
     data['Shipping Urgency'] = pd.Categorical(data['Shipping Urgency'], categories=urgency_order, ordered=True)
 
     # Plot sorted histogram
-    ship_mode = st.selectbox("Choose Ship Mode", data['Ship Mode'].dropna().unique())
-    filtered = data[data['Ship Mode'] == ship_mode]
-
-    fig = px.histogram(
-        filtered,
-        x='Shipping Urgency',
-        title=f"Shipping Urgency for {ship_mode}",
-        category_orders={'Shipping Urgency': urgency_order}
-    )
-
+    fig = px.histogram(data.sort_values('Shipping Urgency'), x='Shipping Urgency', 
+                    category_orders={'Shipping Urgency': urgency_order},
+                    title="Shipping Urgency Breakdown",
+                    hover_data=['Days to Ship', 'Ship Mode', 'Quantity'])
     st.plotly_chart(fig, use_container_width=True)
 
     # Step 9: Optional Outlier Cleaning skipped for simplicity
