@@ -14,15 +14,18 @@ def highlight_order_id(s):
 uploaded_file = st.file_uploader("Upload Superstore Dataset (CSV)", type=["csv"])
 if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
+    st.dataframe(data, use_container_width=True)
     st.subheader("Raw Data Preview")
     st.dataframe(data.head())
+    data_types_df = pd.DataFrame(data.dtypes, columns=["Data Type"])
+    data_types_df["Data Type"] = data_types_df["Data Type"].astype(str)  # Fix for Arrow
 
     # Dataset Overview
     st.markdown("### Dataset Overview")
     col1, col2 = st.columns(2)
     with col1:
         st.metric("Shape", f"{data.shape[0]} rows × {data.shape[1]} columns")
-        st.dataframe(data.dtypes.rename("Data Type"))
+        st.dataframe(data_types_df)
     with col2:
         st.metric("Missing Fields", int(data.isnull().sum().sum()))
         st.dataframe(data.isnull().sum()[data.isnull().sum() > 0].rename("Missing Count"))
