@@ -64,6 +64,7 @@ if uploaded_file is not None:
     fig = px.line(monthly, x='Order Month', y='Order Count', markers=True,
                   title="Monthly Order Volume Over Time",
                   labels={'Order Month': 'Month', 'Order Count': 'Number of Orders'})
+    
     fig.update_layout(xaxis_tickangle=-45)
     st.plotly_chart(fig, use_container_width=True)
 
@@ -79,7 +80,18 @@ if uploaded_file is not None:
     fig = px.box(data, x='Quantity', title="Typical Quantity Ordered per Transaction")
     st.plotly_chart(fig, use_container_width=True)
 
-    fig = px.histogram(data, x='Days to Ship', nbins=20, title="How Long Does Shipping Usually Take?")
+    q1 = data['Days to Ship'].quantile(0.25)
+    q3 = data['Days to Ship'].quantile(0.75)
+    iqr = q3 - q1
+    lower_bound = q1 - 3 * iqr
+    upper_bound = q3 + 3 * iqr
+
+    # Filter out extreme outliers using 3*IQR logic
+    filtered_days_to_ship = data[(data['Days to Ship'] >= lower_bound) & (data['Days to Ship'] <= upper_bound)]
+
+    # Histogram plot on filtered data
+    fig = px.histogram(filtered_days_to_ship, x='Days to Ship', nbins=20,
+                    title="How Long Does Shipping Usually Take? (3×IQR Outlier Removal)")
     st.plotly_chart(fig, use_container_width=True)
 
     # Step 5: Mask Customer Name
@@ -113,8 +125,23 @@ if uploaded_file is not None:
     data['Discount Price'] = data['Original Price'] - data['Sales Price']
     data['Total Discount'] = data['Discount Price'] * data['Quantity']
     data['Shipping Urgency'] = data['Days to Ship'].apply(
-        lambda x: 'Immediate' if x == 0 else ('Urgent' if 1 <= x <= 3 else 'Standard'))
-    fig = px.histogram(data, x='Shipping Urgency', title="Shipping Urgency Breakdown")
+    lambda x: 'Immediate' if x == 0 else ('Urgent' if 1 <= x <= 3 else 'Standard'))
+
+    # Define category order explicitly
+    urgency_order = ['Immediate', 'Urgent', 'Standard']
+    data['Shipping Urgency'] = pd.Categorical(data['Shipping Urgency'], categories=urgency_order, ordered=True)
+
+    # Plot sorted histogram
+    ship_mode = st.selectbox("Choose Ship Mode", data['Ship Mode'].dropna().unique())
+    filtered = data[data['Ship Mode'] == ship_mode]
+
+    fig = px.histogram(
+        filtered,
+        x='Shipping Urgency',
+        title=f"Shipping Urgency for {ship_mode}",
+        category_orders={'Shipping Urgency': urgency_order}
+    )
+
     st.plotly_chart(fig, use_container_width=True)
 
     # Step 9: Optional Outlier Cleaning skipped for simplicity
