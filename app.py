@@ -1,3 +1,4 @@
+from matplotlib.pylab import f
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -110,7 +111,9 @@ if uploaded_file is not None:
     data['Profit'] = pd.to_numeric(data['Profit'], errors='coerce')
     abbrev_map = pd.read_csv("https://raw.githubusercontent.com/jasonong/List-of-US-States/master/states.csv")
     mapping = dict(zip(abbrev_map['Abbreviation'], abbrev_map['State']))
+    reverse_mapping = {v:k for k,v in mapping.items()}
     data['State'] = data['State'].replace(mapping)
+    data['State Code'] = data['State'].replace(reverse_mapping)
     top_states = data['State'].value_counts().head(20).reset_index()
     top_states.columns = ['State', 'Orders']
     fig = px.bar(top_states, x='Orders', y='State', orientation='h', title="Top 20 States by Orders")
@@ -165,7 +168,64 @@ if uploaded_file is not None:
     with col2:
         fig = px.bar(bottom_profit, x='Total Profit', y='Product Name', orientation='h', title="Top 10 Loss-Making Products")
         st.plotly_chart(fig, use_container_width=True)
+        
+    monthly_metrics = data.groupby('Order Month')[['Total Sales','Total Profit']].sum().reset_index()
+    fig = px.line(monthly_metrics, x='Order Month', y=['Total Sales', 'Total Profit'],
+                title="Monthly Sales vs. Profit Trend", markers=True)
+    fig.update_layout(xaxis_tickangle=-45)
+    with st.expander("Monthly Sales vs Profit"):
+       st.plotly_chart(fig, use_container_width=True)
+
+    
+    
+    fig2 = px.histogram(data, x='Category', color='Segment', barmode='group',
+                   title="Category-Wise Orders per Segment")
+    fig2.update_layout(xaxis_tickangle=-45)
+    
+    fig3 = px.histogram(data, x='Sub-Category', color='Segment', barmode='group',
+                   title="Sub-Category-Wise Orders per Segment")
+    fig3.update_layout(xaxis_tickangle=-45)
+    segment_profit = data.groupby('Segment')['Total Profit'].sum().reset_index()
+    fig4 = px.bar(segment_profit, x='Segment', y='Total Profit', title="Total Profit by Segment")
+
+
+
+    with st.expander("Category and Segment Analysis"):
+        st.plotly_chart(fig2,use_container_width=True)
+        st.plotly_chart(fig3,use_container_width=True)
+        st.plotly_chart(fig4,use_container_width=True)
+
+
+
+    by_state = data.groupby('State')[['Total Profit', 'Total Sales']].sum().reset_index()
+
+    fig5 = px.choropleth(by_state, locations='State', locationmode='USA-states',
+                        color='Total Profit', scope='usa', title='Total Profit by State')
+
+    with st.expander("### Profit vs Sales Ratio by State"):
+        # Aggregated data for map
+        map_data = data.groupby('State Code')[['Total Profit', 'Total Sales']].sum().reset_index()
+        map_data['Profit to Sales Ratio'] = map_data['Total Profit'] / map_data['Total Sales']
+        map_data['State'] = map_data['State Code'].replace(mapping)
+        # Toggle selector
+        metric_to_show = st.selectbox(
+            "Select Metric to Visualize:",
+            options=["Profit to Sales Ratio", "Total Profit", "Total Sales"]
+        )
+        # Choropleth Map
+        fig = px.choropleth(
+            map_data,
+            locations="State Code",
+            locationmode="USA-states",
+            color=metric_to_show,
+            scope="usa",
+            hover_name="State",
+            title=f"US State-wise {metric_to_show}",
+            color_continuous_scale="Viridis"
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        
 
     # Step 12: Download Final Dataset
-    if st.download_button("📥 Download Cleaned Dataset", data.to_csv(index=False), file_name="SuperStore_Cleaned.csv"):
+    if st.download_button("Download Cleaned Dataset", data.to_csv(index=False), file_name="SuperStore_Cleaned.csv"):
         st.success("Download ready.")
