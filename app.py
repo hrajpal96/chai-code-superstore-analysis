@@ -197,33 +197,45 @@ if uploaded_file is not None:
 
 
 
-    by_state = data.groupby('State')[['Total Profit', 'Total Sales']].sum().reset_index()
+    
+    with st.expander("### Animated Profit to Sales Ratio by State over Time"):
+        # Ensure Order Year exists
+        data['Order Year'] = pd.to_datetime(data['Order Date']).dt.year
 
-    fig5 = px.choropleth(by_state, locations='State', locationmode='USA-states',
-                        color='Total Profit', scope='usa', title='Total Profit by State')
+        # Group data by State Code and Order Year
+        animated_map_data = data.groupby(['State Code', 'Order Year'])[['Total Profit', 'Total Sales', 'Total Discount']].sum().reset_index()
 
-    with st.expander("### Profit vs Sales Ratio by State"):
-        # Aggregated data for map
-        map_data = data.groupby('State Code')[['Total Profit', 'Total Sales']].sum().reset_index()
-        map_data['Profit to Sales Ratio'] = map_data['Total Profit'] / map_data['Total Sales']
-        map_data['State'] = map_data['State Code'].replace(mapping)
-        # Toggle selector
-        metric_to_show = st.selectbox(
-            "Select Metric to Visualize:",
-            options=["Profit to Sales Ratio", "Total Profit", "Total Sales"]
-        )
-        # Choropleth Map
-        fig = px.choropleth(
-            map_data,
+        # Calculate ratios
+        animated_map_data['Profit to Sales Ratio'] = animated_map_data['Total Profit'] / animated_map_data['Total Sales']
+        animated_map_data['Discount to Sales Ratio'] = animated_map_data['Total Discount'] / animated_map_data['Total Sales']
+        
+        # Add full state names for hover
+        animated_map_data['State'] = animated_map_data['State Code'].replace(mapping)
+
+        # Metric selector
+        animated_metric = st.selectbox("Choose Metric to Animate", options=["Profit to Sales Ratio", "Discount to Sales Ratio", 'Total Sales','Total Profit','Total Discount'])
+
+        # Plotly animated choropleth
+        animated_fig = px.choropleth(
+            animated_map_data,
             locations="State Code",
             locationmode="USA-states",
-            color=metric_to_show,
-            scope="usa",
+            color=animated_metric,
+            animation_frame="Order Year",
             hover_name="State",
-            title=f"US State-wise {metric_to_show}",
-            color_continuous_scale="Viridis"
+            hover_data={
+                "State Code": False,
+                "Total Profit": True,
+                "Total Sales": True,
+                "Total Discount": True,
+                "Profit to Sales Ratio": ':.2%',
+                "Discount to Sales Ratio": ':.2%'
+            },
+            scope="usa",
+            color_continuous_scale="Plasma",
+            title=f"Animated {animated_metric} by State (Year-wise)"
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(animated_fig, use_container_width=True)
         
 
     # Step 12: Download Final Dataset
